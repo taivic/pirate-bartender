@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	
 	var Ingredient = function(name, type) {
 		this.name = name;
 		this.type = type;
@@ -35,7 +36,7 @@ $(document).ready(function(){
 	Worker.prototype.greet = function() {
 		var name = prompt("Ahoy matey! What say your name?");
 		if (this.customers[name]) {
-			alert("Welcome back, here is your favorite dring " + this.customers[name].favorite.name);
+			alert("Welcome back, here is your favorite drink " + this.customers[name].favorite.name);
 		} else {
 			this.customers[name] = new Customer(name);
 		}
@@ -70,6 +71,4 @@ $(document).ready(function(){
 
 	bartender.greet();
 
-
-		
 });
