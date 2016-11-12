@@ -20,6 +20,7 @@ $(document).ready(function(){
 
 	var Customer = function(name) {
 		this.name = name;
+		this.preferences = [];
 		this.favorite = {};
 	}
 
@@ -38,7 +39,8 @@ $(document).ready(function(){
 		if (this.customers[name]) {
 			alert("Welcome back, here is your favorite drink " + this.customers[name].favorite.name);
 		} else {
-			this.customers[name] = new Customer(name);
+			guest = new Customer(name);
+			this.customers[name] = guest;
 		}
 	}
 
@@ -51,6 +53,16 @@ $(document).ready(function(){
 	Bartender.prototype.constructor = Bartender;
 	Bartender.prototype.addQuestion = function(question) {
 		this.questions.push(question);
+	}
+	Bartender.prototype.askQuestion = function(num) {
+		if (num < this.questions.length) {		
+			var html = '<h2>' + this.questions[num].text + '</h2>' +
+				'<select id="answer"><option value="yea">Yea</option><option value="nay">Nay</option></select>' +
+				'<button id="questionSubmit">Submit</button>'
+			$('#question').html(html);
+		} else {
+			console.log('making drink');
+		}
 	}
 
 	var Question = function(text, type) {
@@ -67,8 +79,36 @@ $(document).ready(function(){
 
 	var bartender = new Bartender("Vic");
 
-	var question = new Question("Do you like your drink strong?", "strong");
+	var question = new Question("Do you like your drink strong?", "strong");	
+	bartender.addQuestion(question);
+	var question = new Question("Do you like your drink salty?", "salty");	
+	bartender.addQuestion(question);
+	var question = new Question("Do you like your drink sweet?", "sweet");	
+	bartender.addQuestion(question);
+	var question = new Question("Do you like your drink bitter?", "bitter");	
+	bartender.addQuestion(question);
+	var question = new Question("Do you like your drink fruity?", "fruity");	
+	bartender.addQuestion(question);
 
+	var guest;
+	var questionCount = 0;
 	bartender.greet();
 
+	console.log(bartender);
+	console.log(myPantry);
+	console.log(guest);
+
+	$('#begin').click(function() {
+		$('.start').hide();
+		bartender.askQuestion(questionCount);
+		questionCount++
+	})
+
+	$(document).on('click', '#questionSubmit', function() {
+		if ($('#answer').val() === "yea") {
+			guest.preferences.push(bartender.questions[questionCount].type);
+		}
+		bartender.askQuestion(questionCount);	
+		questionCount++	
+	})
 });
