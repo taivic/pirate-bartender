@@ -1,63 +1,75 @@
 $(document).ready(function(){
-
-	var questions = [
-		"Do ye like yer drinks strong?",
-		"Do ye like it with a salty tang?",
-		"Are ye a lubber who likes it bitter?",
-		"Would ye like a bit of sweetness with yer poison?",
-		"Are ye one for a fruity finish?",
-	]
-	
-	var pantry = {
-		strong: 
-			{
-				0: "Splash of gin",
-				1: "Glug of rum", 
-				2: "slug of whisky", 
-				
-			},
-		salty: 
-			{
-				0: "Olive on a stick", 
-				1: "salt-dusted rim", 
-				2: "rasher of bacon", 
-			},
-		bitter: 
-			{ 
-				0: "splash of tonic", 
-				1: "twist of lemon peel",
-				2: "Shake of bitters",
-			},
-		sweet: 
-			{
-				0: "splash of cola",
-				1: "spoonful of honey",
-				2: "Sugar cube",
-			},
-		fruity: 
-			{
-				0: "Slice of orange", 
-				1: "cherry on top", 
-				2: "dash of cassis", 
-			},
+	var Ingredient = function(name, type) {
+		this.name = name;
+		this.type = type;
 	}
-		
-	var displayQuestions = function(){
-		$(".one").empty();
-		for (var i = 0; i < questions.length; i++){
-			html = "";
-			$("#question").html("<p>" + questions[i] + "</p>");
+
+	var Pantry = function(name) {
+		this.name = name;
+		this.ingredients = {};
+	}
+
+	Pantry.prototype.addIngredient = function(ingredient) {
+		if (this.ingredients[ingredient.type]) {
+			this.ingredients[ingredient.type].push(ingredient.name);
+		} else {
+			this.ingredients[ingredient.type] = [ingredient.name];    
 		}
-
 	}
 
-	$("#begin").click(function(e){
-		e.preventDefault();
-		displayQuestions();
-	});
-
-	/*var bartender = function(drinks){
-		this.drinks = drinks;
+	var Customer = function(name) {
+		this.name = name;
+		this.favorite = {};
 	}
-*/
+
+	var Drink = function(name, ingredients) {
+		this.name = name;
+		this.ingredients = ingredients;
+	}
+
+	var Worker = function(name) {
+		this.name = name;
+		this.customers = {};
+	}
+
+	Worker.prototype.greet = function() {
+		var name = prompt("Ahoy matey! What say your name?");
+		if (this.customers[name]) {
+			alert("Welcome back, here is your favorite dring " + this.customers[name].favorite.name);
+		} else {
+			this.customers[name] = new Customer(name);
+		}
+	}
+
+	var Bartender = function(name) {
+		Worker.call(this, name);
+		this.questions = [];
+	}
+
+	Bartender.prototype = Object.create(Worker.prototype);
+	Bartender.prototype.constructor = Bartender;
+	Bartender.prototype.addQuestion = function(question) {
+		this.questions.push(question);
+	}
+
+	var Question = function(text, type) {
+		this.text = text;
+		this.type = type;
+	}
+
+	var myPantry = new Pantry("myPantry");
+
+	var newIngredient = new Ingredient("Slug of Rum", "strong");
+	myPantry.addIngredient(newIngredient);
+	var newIngredient = new Ingredient("Shot of Whisky", "strong");
+	myPantry.addIngredient(newIngredient);
+
+	var bartender = new Bartender("Vic");
+
+	var question = new Question("Do you like your drink strong?", "strong");
+
+	bartender.greet();
+
+
+		
 });
