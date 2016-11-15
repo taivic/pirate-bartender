@@ -22,6 +22,14 @@ $(document).ready(function(){
 		}
 	}
 
+	Pantry.prototype.getIngredient = function(type) {
+		if (this.ingredients[type]) {
+			var random = Math.floor(Math.random()*this.ingredients[type].length);
+			return this.ingredients[type][random];
+		}
+	}
+
+
 	//object customer
 	var Customer = function(name) {
 		this.name = name;
@@ -35,21 +43,10 @@ $(document).ready(function(){
 		this.ingredients = ingredients;
 	}
 
-	var myDrink = new Drink("myDrink");
+	
 	var guest = new Customer(name)
 	//create drink from preferences
-	Drink.prototype.makeDrink = function(Customer, Ingredient) {
-		if (guest.preferences.length > 0) {
-			//find random ingredients that match preferences
-			for (var i = 0; i < guest.preferences.length; i++) {			
-				console.log(guest.preferences[i]);	
-			//insert adjectives
-			}
-		} else {
-			var html = "<p>" + "A glass of distilled sea water." + "</p>"
-			$("#drinks").html(html);    
-		}
-	}
+
 
 	//object worker which includes bartender
 	var Worker = function(name) {
@@ -74,6 +71,8 @@ $(document).ready(function(){
 		this.questions = [];
 	}
 
+
+
 	Bartender.prototype = Object.create(Worker.prototype);
 	Bartender.prototype.constructor = Bartender;
 	
@@ -86,7 +85,7 @@ $(document).ready(function(){
 		if (questionCount < this.questions.length) {		
 			var html = '<h2>' + this.questions[questionCount].text + '</h2>' +
 				'<br>' +
-				'<select class="form-control input-lg" id="answer"><option value="" disabled selected>Select...or else...!</option><option value="yea">Yea</option><option value="nay">Nay</option></select>' +
+				'<select class="form-control input-lg" id="answer"><option value="yea">Yea</option><option value="nay">Nay</option></select>' +
 				'<br>' +
 				'<button id="questionSubmit" class="btn btn-danger btn-lg btn-block">Submit</button>'
 			$('#question').html(html);
@@ -95,7 +94,23 @@ $(document).ready(function(){
 			var html = '<h2>' + "This is what you asked for..." + '</h2>' //+DRINK NAME
 			$('#results').html(html);
 			console.log('making drink');
-			myDrink.makeDrink(Customer, Ingredient);
+		}
+	}
+
+	Bartender.prototype.makeDrink = function(preferences, pantry) {
+		var ingredients = [];
+		if (preferences.length > 0) {
+			//find random ingredients that match preferences
+			for (var i = 0; i < preferences.length; i++) {			
+				console.log(preferences[i]);
+				ingredients.push(pantry.getIngredient(preferences[i]));
+			//insert adjectives
+			}
+			var myDrink = new Drink("myDrink", ingredients);
+			console.log(myDrink);
+		} else {
+			var html = "<p>" + "A glass of distilled sea water." + "</p>"
+			$("#drinks").html(html);    
 		}
 	}
 
@@ -138,6 +153,10 @@ $(document).ready(function(){
 	var newIngredient = new Ingredient("cherry on top", "fruity", "Cherry");
 	myPantry.addIngredient(newIngredient);
 
+	for (var i = 0; i < 5; i++) {
+		console.log(myPantry.getIngredient("strong"));
+	}
+
 	var bartender = new Bartender("Vic");
 
 	var question = new Question("Do ye like yer drinks strong?", "strong");	
@@ -162,14 +181,14 @@ $(document).ready(function(){
 	$('#begin').click(function() {
 		$('.start').hide();
 		bartender.askQuestion(questionCount);
-		questionCount++
 	})
 
 	$(document).on('click', '#questionSubmit', function() {
+		console.log(questionCount);
 		if ($('#answer').val() === "yea") {
 			guest.preferences.push(bartender.questions[questionCount].type);
 		}
+		questionCount++
 		bartender.askQuestion(questionCount);	
-		questionCount++	
 	})
 });
