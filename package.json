@@ -1,0 +1,24 @@
+{
+  "name": "pirate-bartender",
+  "version": "1.0.0",
+  "description": "Example questions:",
+  "main": "app.js",
+  "scripts": {
+    "test": "\u001b[A\u001b[A\u001b[D\u001b[D\u001b[C\u001b[B\u001b[B"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taivic/pirate-bartender.git"
+  },
+  "author": "Vic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taivic/pirate-bartender/issues"
+  },
+  "homepage": "https://github.com/taivic/pirate-bartender#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jQuery": "^1.7.4",
+    "jquery": "^3.1.1"
+  }
+}

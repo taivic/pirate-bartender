@@ -1,10 +1,9 @@
 $(document).ready(function(){
 	
 	//object ingredient
-	var Ingredient = function(name, type, drinkName) {
+	var Ingredient = function(name, type) {
 		this.name = name;
 		this.type = type;
-		this.drinkName = drinkName;
 	}
 
 	//object pantry
@@ -94,6 +93,7 @@ $(document).ready(function(){
 			var html = '<h2>' + "This is what you asked for..." + '</h2>' //+DRINK NAME
 			$('#results').html(html);
 			console.log('making drink');
+
 		}
 	}
 
@@ -103,13 +103,19 @@ $(document).ready(function(){
 			//find random ingredients that match preferences
 			for (var i = 0; i < preferences.length; i++) {			
 				console.log(preferences[i]);
-				ingredients.push(pantry.getIngredient(preferences[i]));
-			//insert adjectives
+				//get random ingredient based on customer preferences
+				console.log(myPantry.getIngredient(guest.preferences[i]));
+				ingredients.push(myPantry.getIngredient(guest.preferences[i]));
 			}
-			var myDrink = new Drink("myDrink", ingredients);
-			console.log(myDrink);
+			var adjectives = ["Joyful", "Furious", "Irritated", "Glowing", "Thirsty"];
+			var nouns = ["Pirate", "Parrot", "Hook", "Sail", "Boat"];
+			var pirateBartender = adjectives[Math.floor(Math.random() * adjectives.length)] 
+				+ nouns[Math.floor(Math.random() * nouns.length)];
+			console.log(pirateBartender);
+			var html = "<p>" + "A " + pirateBartender + "</p>";
+			$("#drinks").html(html);
 		} else {
-			var html = "<p>" + "A glass of distilled sea water." + "</p>"
+			var html = "<p>" + "A glass of distilled sea water." + "</p>";
 			$("#drinks").html(html);    
 		}
 	}
@@ -122,40 +128,39 @@ $(document).ready(function(){
 
 	var myPantry = new Pantry("myPantry");
 
-	var newIngredient = new Ingredient("Slug of Rum", "strong", "Slug");
+	var newIngredient = new Ingredient("Slug of Rum", "strong");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Shot of Whisky", "strong", "Shot");
+	var newIngredient = new Ingredient("Shot of Whisky", "strong");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Splash of Gin", "strong", "Splash");
+	var newIngredient = new Ingredient("Splash of Gin", "strong");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Olive on a stick", "salty", "Olive");
+	var newIngredient = new Ingredient("Olive on a stick", "salty");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Salt-dusted rim", "salty", "Dusted");
+	var newIngredient = new Ingredient("Salt-dusted rim", "salty");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Rasher of bacon", "salty", "Bacon");
+	var newIngredient = new Ingredient("Rasher of bacon", "salty");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Shake of bitters", "bitter", "Bitters");
+	var newIngredient = new Ingredient("Shake of bitters", "bitter");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("splash of tonic", "bitter", "Tonic");
+	var newIngredient = new Ingredient("splash of tonic", "bitter");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("twist of lemon peel", "bitter", "Twist");
+	var newIngredient = new Ingredient("twist of lemon peel", "bitter");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Sugar cube", "sweet", "Cube");
+	var newIngredient = new Ingredient("Sugar cube", "sweet");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("spoonful of honey", "sweet", "Honey");
+	var newIngredient = new Ingredient("spoonful of honey", "sweet");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("splash of cola", "sweet", "Cola");
+	var newIngredient = new Ingredient("splash of cola", "sweet");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("Slice of orange", "fruity", "Orange");
+	var newIngredient = new Ingredient("Slice of orange", "fruity");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("dash of cassis", "fruity", "Cassis");
+	var newIngredient = new Ingredient("dash of cassis", "fruity");
 	myPantry.addIngredient(newIngredient);
-	var newIngredient = new Ingredient("cherry on top", "fruity", "Cherry");
+	var newIngredient = new Ingredient("cherry on top", "fruity");
 	myPantry.addIngredient(newIngredient);
 
-	for (var i = 0; i < 5; i++) {
-		console.log(myPantry.getIngredient("strong"));
-	}
+	
+
 
 	var bartender = new Bartender("Vic");
 
@@ -189,6 +194,10 @@ $(document).ready(function(){
 			guest.preferences.push(bartender.questions[questionCount].type);
 		}
 		questionCount++
-		bartender.askQuestion(questionCount);	
+		if (questionCount === bartender.questions.length) {
+			bartender.makeDrink(guest.preferences, myPantry);	
+		} else {
+			bartender.askQuestion(questionCount);
+		}
 	})
 });
